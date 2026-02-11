@@ -60,9 +60,9 @@ function App() {
           <Hero></Hero>
         </div>
         <Services />
-        <div className="mx-auto p-8">
+        {/* <div className="mx-auto p-8">
           <MotionButton label="OUR SERVICES" />
-        </div>
+        </div> */}
         <div className="bg-[#fffaf0] text-center">
           <motion.div
             className="mt-20 mx-auto tracking-widest text-[#b8860b] text-center"
@@ -93,11 +93,9 @@ function App() {
         >
           <Reviewes />
         </motion.div>
-        
       </div>
       <Footer />
     </div>
-    
   );
 }
 

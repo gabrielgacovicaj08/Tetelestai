@@ -65,7 +65,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="col-span-2 relative overflow-hidden p-4">
+      <div className="col-span-2 overflow-hidden flex justify-end">
         <AnimatePresence mode="wait">
           <motion.img
             key={slide.image}

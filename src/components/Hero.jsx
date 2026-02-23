@@ -1,22 +1,29 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import heroMain from "../assets/hero-placeholder_edited_edited (1).webp";
+import heroAltOne from "../assets/Home-Welcome-1.webp";
+import heroAltTwo from "../assets/before-after24_edited.webp";
 
 export default function Hero() {
   const slides = [
     {
-      title: "Make Your Dream Home",
-      image:
-        "https://cdn.home-designing.com/wp-content/uploads/2018/09/modern-chandeliers.jpg",
+      title: "Make your dream home real",
+      description:
+        "High-end renovation and custom build work for kitchens, bathrooms, and full-home transformations.",
+      image: heroMain,
     },
     {
-      title: "Design Modern Interiors",
-      image:
-        "https://cdn.home-designing.com/wp-content/uploads/2018/09/Wood-store-ideas.jpg",
+      title: "Design modern interiors",
+      description:
+        "We combine planning, craftsmanship, and transparent communication from first demo to final walkthrough.",
+      image: heroAltOne,
     },
     {
-      title: "Crafted with Precision",
-      image:
-        "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      title: "Built with precision",
+      description:
+        "Your space gets details that hold up over time, with installation quality that feels intentional in every room.",
+      image: heroAltTwo,
     },
   ];
 
@@ -33,51 +40,89 @@ export default function Hero() {
   const slide = slides[index];
 
   return (
-    <div className="body-bg grid grid-cols-3 h-[550px] mt-14">
-      <div className="flex flex-col justify-center items-start items-center p-4">
-        <div className=" flex flex-row">Tetelestai</div>
+    <section className="section-shell grid min-h-[620px] grid-cols-1 items-center gap-8 py-10 lg:grid-cols-[1.05fr_1fr]">
+      <div className="rounded-3xl border border-white/60 bg-[var(--brand-card)] p-7 shadow-[0_18px_70px_rgba(0,0,0,0.08)] backdrop-blur-md sm:p-10">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#92671d]">
+          Dallas Renovation Specialists
+        </p>
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.title}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ x: -100, opacity: 0 }}
-            transition={{ duration: 0.8 }}
+            exit={{ x: -30, opacity: 0 }}
+            transition={{ duration: 0.55 }}
+            className="mt-4"
           >
-            <div className="md:text-sm lg:text-4xl flex flex-row">
+            <h1 className="max-w-xl text-4xl font-semibold leading-tight text-[var(--brand-deep)] md:text-5xl">
               {slide.title}
-            </div>
+            </h1>
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg">
+              {slide.description}
+            </p>
           </motion.div>
         </AnimatePresence>
-        <div className="flex flex-row mt-20">
+
+        <div className="mt-9 flex flex-wrap items-center gap-4">
+          <a
+            href="#projects"
+            className="rounded-full bg-[#e3bf7b] px-6 py-3 text-sm font-semibold text-[#1b1b1b] transition hover:-translate-y-0.5 hover:bg-[#d3ac61]"
+          >
+            View Projects
+          </a>
+          <a
+            href="#reviews"
+            className="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-slate-500"
+          >
+            Read Reviews
+          </a>
+        </div>
+
+        <div className="mt-10 flex items-center gap-3">
           <button
             onClick={prev}
-            className="px-4 py-2 text-black rounded hover:bg-gray-700 transition"
+            className="rounded-full border border-slate-300 p-2.5 text-slate-700 transition hover:border-slate-500 hover:bg-white"
+            aria-label="Previous slide"
           >
-            ←
+            <FiArrowLeft size={18} />
           </button>
           <button
             onClick={next}
-            className="px-4 py-2 text-black rounded hover:bg-gray-700 transition"
+            className="rounded-full border border-slate-300 p-2.5 text-slate-700 transition hover:border-slate-500 hover:bg-white"
+            aria-label="Next slide"
           >
-            →
+            <FiArrowRight size={18} />
           </button>
+          <div className="ml-2 flex items-center gap-2">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`h-2.5 rounded-full transition ${
+                  i === index ? "w-8 bg-[var(--brand-deep)]" : "w-2.5 bg-slate-300"
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="col-span-2 overflow-hidden flex justify-end">
+      <div className="relative">
+        <div className="absolute -top-4 -right-4 h-40 w-40 rounded-full bg-[#d9b983]/40 blur-2xl" />
         <AnimatePresence mode="wait">
           <motion.img
             key={slide.image}
             src={slide.image}
-            className="img-fixed"
+            alt={slide.title}
+            className="h-[460px] w-full rounded-3xl object-cover shadow-[0_24px_80px_rgba(10,14,20,0.32)] md:h-[540px]"
             initial={{ opacity: 0, x: 0 }}
-            animate={{ opacity: 1, x: 10 }}
-            exit={{ x: 100, opacity: 0 }}
-            transition={{ duration: 0.8 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ x: 40, opacity: 0 }}
+            transition={{ duration: 0.55 }}
           />
         </AnimatePresence>
       </div>
-    </div>
+    </section>
   );
 }

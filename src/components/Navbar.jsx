@@ -1,32 +1,27 @@
 
-
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
-import Logo from "../assets/tetelestailogo1.PNG"; // adjust path
+import Logo from "../assets/tetelestailogo1.PNG";
 
 function Navbar({ title, links = [] }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-[#fafad2] shadow-md z-50">
-      <div className="px-6 py-2 flex justify-between items-center">
-        {/* LEFT: Logo + Title */}
+    <nav className="fixed top-0 left-0 z-50 w-full border-b border-white/40 bg-[#f8f3e9e6] backdrop-blur-md">
+      <div className="section-shell flex items-center justify-between py-3">
         <div className="flex items-center gap-3">
-          <img src={Logo} alt="Logo" className="h-12 md:h-16 w-auto" />
-          <a href="/" className="text-lg md:text-xl font-medium">
+          <img src={Logo} alt="Tetelestai Renovations logo" className="h-10 w-auto md:h-12" />
+          <a href="#" className="text-base font-semibold tracking-wide md:text-lg">
             {title}
           </a>
         </div>
 
-        {/* DESKTOP LINKS */}
-        <ul className="hidden md:flex gap-4">
+        <ul className="hidden items-center gap-6 md:flex">
           {links.map((link, index) => (
             <li key={index}>
               <a
                 href={link.href}
-                className="inline-block px-2 py-2 transition-all duration-300 ease-out hover:scale-110 hover:opacity-80"
-
-
+                className="inline-block text-sm font-medium text-slate-700 transition hover:text-black"
               >
                 {link.label}
               </a>
@@ -34,32 +29,46 @@ function Navbar({ title, links = [] }) {
           ))}
         </ul>
 
-        {/* MOBILE MENU BUTTON */}
+        <a
+          href="#reviews"
+          className="hidden rounded-full bg-[#e3bf7b] px-4 py-2 text-sm font-semibold text-[#1b1b1b] transition hover:bg-[#d3ac61] md:inline-flex"
+        >
+          Get Estimate
+        </a>
+
         <button
           className="md:hidden p-2 rounded hover:bg-black/10 transition"
           onClick={() => setOpen((v) => !v)}
-          aria-label="Open menu"
+          aria-label="Open main menu"
           aria-expanded={open}
         >
           {open ? <FiX size={24} /> : <FiMenu size={24} />}
         </button>
       </div>
 
-      {/* MOBILE DROPDOWN */}
       {open && (
-        <div className="md:hidden px-6 pb-4">
-          <ul className="flex flex-col gap-2 bg-white/60 backdrop-blur-md rounded-xl p-3 shadow">
+        <div className="section-shell pb-4 md:hidden">
+          <ul className="flex flex-col gap-2 rounded-2xl border border-white/50 bg-white/70 p-3 shadow-[0_16px_40px_rgba(0,0,0,0.12)]">
             {links.map((link, index) => (
               <li key={index}>
                 <a
                   href={link.href}
-                  className="block px-3 py-2 rounded hover:bg-black/10 transition"
-                  onClick={() => setOpen(false)} // close after click
+                  className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-black/10 transition"
+                  onClick={() => setOpen(false)}
                 >
                   {link.label}
                 </a>
               </li>
             ))}
+            <li>
+              <a
+                href="#reviews"
+                className="mt-1 block rounded-lg bg-[#e3bf7b] px-3 py-2 text-sm font-semibold text-[#1b1b1b] transition hover:bg-[#d3ac61]"
+                onClick={() => setOpen(false)}
+              >
+                Get Estimate
+              </a>
+            </li>
           </ul>
         </div>
       )}

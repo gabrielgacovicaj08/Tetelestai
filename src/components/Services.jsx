@@ -1,9 +1,8 @@
-import { LuHouse } from "react-icons/lu";
 import { motion } from "framer-motion";
-import beforeAfter23 from "../assets/before-after23.jpg";
-import beforeAfter24 from "../assets/before-after24.jpg";
-import beforeAfter2 from "../assets/before-after2.jpg";
-import houseExtension from "../assets/hero-placeholder.jpg";
+import beforeAfter23 from "../assets/before-after23.webp";
+import beforeAfter24 from "../assets/before-after24.webp";
+import beforeAfter2 from "../assets/before-after2.webp";
+import houseExtension from "../assets/hero-placeholder_edited_edited.webp";
 
 function Services() {
   const services = [
@@ -11,120 +10,77 @@ function Services() {
       title: "Total Renovation",
       subtitle: "Renovate your home from the ground up with purpose",
       description:
-        "Delivering total home upgrades with care, precision, and skilled craftmanship",
+        "Delivering total home upgrades with care, precision, and skilled craftsmanship.",
       src: beforeAfter23,
     },
     {
       title: "House Extension",
-      subtitle: "Expand your living space with seamless, stylish extension",
+      subtitle: "Expand your living space with seamless design",
       description:
-        "Transform your home with thoughtful extensions that blend perfectly with your existing structure",
+        "Transform your home with thoughtful extensions that blend with your existing structure.",
       src: houseExtension,
     },
     {
-      title: "Bathrooms",
-      subtitle: "Enjoy tailored leisure that suits your preferences",
+      title: "Bathroom Remodel",
+      subtitle: "Create comfort with practical luxury",
       description:
-        "Elevate your bathroom experience with our expert renovation services, tailored specifically for you",
+        "From waterproofing to fixtures, we build bathrooms that feel refined and perform for years.",
       src: beforeAfter2,
     },
     {
-      title: "Kitchen",
-      subtitle: "Make the place you cook part of the food experience",
+      title: "Kitchen Remodel",
+      subtitle: "Make the heart of your home work better",
       description:
-        "From initial design to final touches, we ensure your kitchen renovation exceeds expectations",
+        "Design-led renovation, storage planning, and finish quality that improve both look and workflow.",
       src: beforeAfter24,
     },
   ];
 
-  const imgFromLeft = {
-    hidden: { opacity: 0, x: -80 },
-    show: { opacity: 1, x: 0, transition: { duration: 0.9, ease: "easeOut" } },
-  };
-
-  const imgFromRight = {
-    hidden: { opacity: 0, x: 80 },
-    show: { opacity: 1, x: 0, transition: { duration: 0.9, ease: "easeOut" } },
-  };
-
-  const textFromRight = {
-    hidden: { opacity: 0, x: 80 },
-    show: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.9, ease: "easeOut", delay: 0.15 },
-    },
-  };
-
-  const textFromLeft = {
-    hidden: { opacity: 0, x: -80 },
-    show: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.9, ease: "easeOut", delay: 0.15 },
-    },
-  };
-
-  const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-      },
-    },
+  const cardReveal = {
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
   return (
-    <section className="w-full bg-gray-100 py-8">
-      {services.map((service, index) => {
-        const reverse = index % 2 !== 0;
+    <section className="section-shell py-8 md:py-12">
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#92671d]">
+            Signature Services
+          </p>
+          <h2 className="mt-3 text-3xl font-semibold text-[var(--brand-deep)] md:text-4xl">
+            Renovation Work That Feels Intentional
+          </h2>
+        </div>
+      </div>
 
-        return (
-          <motion.div
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {services.map((service, index) => (
+          <motion.article
             key={index}
-            className="mx-auto w-full max-w-[1900px] bg-white mb-16"
+            className="group overflow-hidden rounded-3xl border border-white/60 bg-white/75 shadow-[0_18px_56px_rgba(16,25,34,0.12)] backdrop-blur-md"
+            variants={cardReveal}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, amount: 0.35 }}
+            viewport={{ once: true, amount: 0.25 }}
           >
-            <div
-              className={`flex flex-col md:flex-row ${
-                reverse ? "md:flex-row-reverse" : ""
-              }`}
-            >
-              {/* IMAGE half */}
-              <motion.div
-                className="md:w-1/2"
-                variants={reverse ? imgFromRight : imgFromLeft}
-              >
-                <img
-                  src={service.src}
-                  alt={service.title}
-                  className="h-[260px] w-full object-cover md:h-[240px] lg:h-[280px]"
-                />
-              </motion.div>
-
-              {/* TEXT half */}
-              <motion.div
-                className="md:w-1/2 px-10 py-8 flex flex-col justify-center"
-                variants={reverse ? textFromLeft : textFromRight}
-              >
-                <h2 className="text-2xl text-gray-900">{service.title}</h2>
-
-                <p className="mt-4 text-gray-500">{service.subtitle}</p>
-
-                <div className="mt-8 h-px w-full bg-gray-300" />
-
-                <p className="mt-8 text-gray-700 leading-relaxed">
-                  {service.description}
-                </p>
-              </motion.div>
+            <div className="overflow-hidden">
+              <img
+                src={service.src}
+                alt={service.title}
+                className="h-[240px] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+              />
             </div>
-          </motion.div>
-        );
-      })}
+            <div className="p-7">
+              <h3 className="text-2xl font-semibold text-[var(--brand-deep)]">{service.title}</h3>
+              <p className="mt-3 text-sm font-medium uppercase tracking-wider text-[#9b7a43]">
+                {service.subtitle}
+              </p>
+              <p className="mt-5 text-base leading-relaxed text-slate-600">{service.description}</p>
+            </div>
+          </motion.article>
+        ))}
+      </div>
     </section>
   );
 }

@@ -68,13 +68,12 @@ function BeforeAfterSlider({ beforeImage, afterImage, title }) {
     <div className="relative h-[260px] w-full overflow-hidden rounded-2xl md:h-[320px]">
       <img src={afterImage} alt={`${title} after renovation`} className="h-full w-full object-cover" />
 
-      <div className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: `${position}%` }}>
-        <img
-          src={beforeImage}
-          alt={`${title} before renovation`}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      </div>
+      <img
+        src={beforeImage}
+        alt={`${title} before renovation`}
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
+      />
 
       <div className="absolute inset-y-0 z-10" style={{ left: `calc(${position}% - 1px)` }}>
         <div className="h-full w-0.5 bg-white/90 shadow-[0_0_0_1px_rgba(0,0,0,0.2)]" />

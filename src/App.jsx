@@ -7,6 +7,7 @@ import ProjectPortfolio from "./components/ProjectPortfolio";
 import Services from "./components/Services";
 import WhatTetelestaiCanDo from "./components/WhatTetelestaiCanDo";
 import ProcessTimeline from "./components/ProcessTimeline";
+import OurMission from "./components/OurMission";
 import Reviews from "./components/Reviews";
 import Footer from "./components/Footer";
 
@@ -53,6 +54,8 @@ function App() {
         <section id="process">
           <ProcessTimeline />
         </section>
+
+        <OurMission />
 
         <section id="about" className="section-shell py-18 text-center">
           <motion.div

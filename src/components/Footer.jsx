@@ -15,6 +15,7 @@ export default function Footer() {
             <img
               src={Logo}
               alt="Tetelestai Renovations"
+              loading="lazy"
               className="w-[280px] max-w-full opacity-95"
             />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">

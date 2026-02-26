@@ -66,11 +66,17 @@ function BeforeAfterSlider({ beforeImage, afterImage, title }) {
 
   return (
     <div className="relative h-[260px] w-full overflow-hidden rounded-2xl md:h-[320px]">
-      <img src={afterImage} alt={`${title} after renovation`} className="h-full w-full object-cover" />
+      <img
+        src={afterImage}
+        alt={`${title} after renovation`}
+        loading="lazy"
+        className="h-full w-full object-cover"
+      />
 
       <img
         src={beforeImage}
         alt={`${title} before renovation`}
+        loading="lazy"
         className="absolute inset-0 h-full w-full object-cover"
         style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
       />
@@ -180,6 +186,7 @@ function ProjectModal({ project, onClose }) {
                 key={`${project.title}-${idx}`}
                 src={imageSrc}
                 alt={`${project.title} gallery ${idx + 1}`}
+                loading="lazy"
                 className="h-44 w-full rounded-xl object-cover"
               />
             ))}

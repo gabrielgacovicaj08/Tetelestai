@@ -115,6 +115,7 @@ export default function Hero() {
             key={slide.image}
             src={slide.image}
             alt={slide.title}
+            loading="lazy"
             className="h-[460px] w-full rounded-3xl object-cover shadow-[0_24px_80px_rgba(10,14,20,0.32)] md:h-[540px]"
             initial={{ opacity: 0, x: 0 }}
             animate={{ opacity: 1, x: 0 }}

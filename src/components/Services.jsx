@@ -68,6 +68,7 @@ function Services() {
               <img
                 src={service.src}
                 alt={service.title}
+                loading="lazy"
                 className="h-[240px] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
               />
             </div>

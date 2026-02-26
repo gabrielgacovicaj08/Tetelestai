@@ -10,7 +10,12 @@ function Navbar({ title, links = [] }) {
     <nav className="fixed top-0 left-0 z-50 w-full border-b border-white/40 bg-[#f8f3e9e6] backdrop-blur-md">
       <div className="section-shell flex items-center justify-between py-3">
         <div className="flex items-center gap-3">
-          <img src={Logo} alt="Tetelestai Renovations logo" className="h-10 w-auto md:h-12" />
+          <img
+            src={Logo}
+            alt="Tetelestai Renovations logo"
+            loading="lazy"
+            className="h-10 w-auto md:h-12"
+          />
           <a href="#" className="text-base font-semibold tracking-wide md:text-lg">
             {title}
           </a>

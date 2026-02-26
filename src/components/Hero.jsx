@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import heroMain from "../assets/hero-placeholder_edited_edited (1).webp";
-import heroAltOne from "../assets/Home-Welcome-1.webp";
-import heroAltTwo from "../assets/before-after24_edited.webp";
+import heroMain from "../assets/total renovation/G7400434-HDR-Enhanced-NR.webp";
+import heroAltOne from "../assets/kitchen/before-after24.webp";
+import heroAltTwo from "../assets/house extension/before-after19.webp";
 
 export default function Hero() {
   const slides = [

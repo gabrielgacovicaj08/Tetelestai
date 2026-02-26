@@ -1,117 +1,56 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FiX } from "react-icons/fi";
-import beforeAfter23 from "../assets/before-after23.webp";
-import beforeAfter24 from "../assets/before-after24.webp";
-import beforeAfter2 from "../assets/before-after2.webp";
-import homeWelcome1 from "../assets/Home-Welcome-1.webp";
-import homeWelcome2 from "../assets/hero-placeholder_edited_edited (1).webp";
-import kilbrideAfter from "../assets/24-019_7818 Kilbride Ln_edited.webp";
-import northillExtra1 from "../assets/08-005_620 Northill Dr.webp";
-import northillExtra2 from "../assets/14-016_620 Northill Dr.webp";
-import kilbrideExtra from "../assets/18-010_7818 Kilbride Ln.webp";
-import interiorExtra1 from "../assets/G7400232-HDR-Enhanced-NR.webp";
-import interiorExtra2 from "../assets/G7400609-Enhanced-NR.webp";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { FiChevronLeft, FiChevronRight, FiExternalLink, FiMapPin, FiX } from "react-icons/fi";
 
-const projects = [
-  {
-    title: "Northill Drive Whole-Home Renovation",
-    location: "Richardson, TX",
-    duration: "12 weeks",
-    budget: "$120k - $180k",
-    scope: "Kitchen, living areas, lighting, flooring, and structural refinements.",
-    beforeImage: beforeAfter23,
-    afterImage: homeWelcome1,
-    highlights: [
-      "Full demolition and rebuild of main living zones",
-      "Lighting redesign and custom finish upgrades",
-      "Flooring replacement with modern continuous flow",
-    ],
-    gallery: [homeWelcome1, northillExtra1, northillExtra2],
-  },
-  {
-    title: "Kilbride Lane Kitchen + Bath Remodel",
-    location: "Dallas, TX",
-    duration: "8 weeks",
-    budget: "$70k - $110k",
-    scope: "Custom cabinetry, tile package, vanity updates, and fixture replacement.",
-    beforeImage: beforeAfter2,
-    afterImage: kilbrideAfter,
-    highlights: [
-      "Cabinet reconfiguration to maximize storage",
-      "Updated tile and shower finishes with clean lines",
-      "Plumbing and electrical fixture modernization",
-    ],
-    gallery: [kilbrideAfter, kilbrideExtra, beforeAfter2],
-  },
-  {
-    title: "Open-Concept Interior Refresh",
-    location: "Plano, TX",
-    duration: "6 weeks",
-    budget: "$45k - $80k",
-    scope: "Wall reconfiguration, paint, trim, and full finish modernization.",
-    beforeImage: beforeAfter24,
-    afterImage: homeWelcome2,
-    highlights: [
-      "Wall adjustments to open sight-lines",
-      "Fresh paint and trim package across shared spaces",
-      "Finish coordination for a cohesive modern interior",
-    ],
-    gallery: [homeWelcome2, interiorExtra1, interiorExtra2],
-  },
-];
+const sortByPath = ([a], [b]) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+const toGallery = (modules, limit = 24) =>
+  Object.entries(modules).sort(sortByPath).map(([, src]) => src).slice(0, limit);
 
-function BeforeAfterSlider({ beforeImage, afterImage, title }) {
-  const [position, setPosition] = useState(50);
+const northHillModules = import.meta.glob("../assets/North Hill dr/*.webp", {
+  eager: true,
+  import: "default",
+});
+const kilbrideModules = import.meta.glob("../assets/kilbride ln/*.webp", {
+  eager: true,
+  import: "default",
+});
+const loversLaneModules = import.meta.glob("../assets/LoversLane/*.webp", {
+  eager: true,
+  import: "default",
+});
+const huntingtonModules = import.meta.glob("../assets/Huntington/*.webp", {
+  eager: true,
+  import: "default",
+});
+const twinCovesModules = import.meta.glob("../assets/Twin coves/*.webp", {
+  eager: true,
+  import: "default",
+});
 
-  return (
-    <div className="relative h-[260px] w-full overflow-hidden rounded-2xl md:h-[320px]">
-      <img
-        src={afterImage}
-        alt={`${title} after renovation`}
-        loading="lazy"
-        className="h-full w-full object-cover"
-      />
+function ProjectGalleryModal({ project, onClose }) {
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
-      <img
-        src={beforeImage}
-        alt={`${title} before renovation`}
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover"
-        style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
-      />
-
-      <div className="absolute inset-y-0 z-10" style={{ left: `calc(${position}% - 1px)` }}>
-        <div className="h-full w-0.5 bg-white/90 shadow-[0_0_0_1px_rgba(0,0,0,0.2)]" />
-        <div className="absolute left-1/2 top-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/70 bg-[#0f1720]/85 text-xs font-semibold text-white">
-          |||
-        </div>
-      </div>
-
-      <div className="pointer-events-none absolute left-3 top-3 rounded-full bg-black/65 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
-        Before
-      </div>
-      <div className="pointer-events-none absolute right-3 top-3 rounded-full bg-[#0f1720]/85 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
-        After
-      </div>
-
-      <input
-        type="range"
-        min="0"
-        max="100"
-        value={position}
-        onChange={(event) => setPosition(Number(event.target.value))}
-        className="absolute inset-x-4 bottom-4 z-20 accent-[#e3bf7b]"
-        aria-label={`${title} before and after slider`}
-      />
-    </div>
-  );
-}
-
-function ProjectModal({ project, onClose }) {
   useEffect(() => {
+    setLightboxIndex(null);
+  }, [project?.title]);
+
+  useEffect(() => {
+    if (!project) return undefined;
     const onKeyDown = (event) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        if (lightboxIndex !== null) {
+          setLightboxIndex(null);
+          return;
+        }
+        onClose();
+      }
+      if (lightboxIndex === null) return;
+      if (event.key === "ArrowRight") {
+        setLightboxIndex((prev) => (prev + 1) % project.gallery.length);
+      }
+      if (event.key === "ArrowLeft") {
+        setLightboxIndex((prev) => (prev - 1 + project.gallery.length) % project.gallery.length);
+      }
     };
 
     document.body.style.overflow = "hidden";
@@ -121,77 +60,114 @@ function ProjectModal({ project, onClose }) {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [onClose]);
+  }, [project, onClose, lightboxIndex]);
+
+  if (!project) return null;
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[120] bg-black/70 p-4 backdrop-blur-sm"
       onClick={onClose}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        onClick={(event) => event.stopPropagation()}
-        initial={{ opacity: 0, y: 30 }}
+        className="mx-auto flex h-full w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-white/20 bg-[#0f1720] text-white shadow-[0_25px_90px_rgba(0,0,0,0.5)]"
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
-        className="max-h-[92vh] w-full max-w-5xl overflow-auto rounded-3xl border border-white/20 bg-[#101821] text-white shadow-[0_26px_100px_rgba(0,0,0,0.5)]"
+        onClick={(event) => event.stopPropagation()}
       >
-        <div className="sticky top-0 z-20 flex items-center justify-between border-b border-white/10 bg-[#101821]/95 px-5 py-4 backdrop-blur-sm">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d8b171]">Case Study</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d8b171]">Project Gallery</p>
             <h3 className="mt-1 text-xl font-semibold md:text-2xl">{project.title}</h3>
           </div>
           <button
             onClick={onClose}
             className="rounded-full border border-white/25 p-2 text-white/90 transition hover:border-white/50 hover:bg-white/10"
-            aria-label="Close project details"
+            aria-label="Close project gallery"
           >
             <FiX size={18} />
           </button>
         </div>
 
-        <div className="p-5 md:p-7">
-          <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
-              {project.location}
-            </span>
-            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
-              Duration: {project.duration}
-            </span>
-            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
-              Budget: {project.budget}
-            </span>
-          </div>
+        <div className="flex flex-wrap items-center gap-2 border-b border-white/10 px-5 py-4">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
+            <FiMapPin size={14} />
+            {project.location}
+          </span>
+          <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
+            {project.images} Photos
+          </span>
+          <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
+            {project.scope}
+          </span>
+        </div>
 
-          <p className="mt-5 text-sm leading-relaxed text-white/80 md:text-base">{project.scope}</p>
-
-          <h4 className="mt-7 text-sm font-semibold uppercase tracking-[0.18em] text-[#d8b171]">
-            Highlights
-          </h4>
-          <ul className="mt-3 space-y-2">
-            {project.highlights.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm text-white/90 md:text-base">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#d8b171]" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-
-          <h4 className="mt-8 text-sm font-semibold uppercase tracking-[0.18em] text-[#d8b171]">Gallery</h4>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+        <div className="flex-1 overflow-y-auto p-4 md:p-5">
+          <div className="columns-1 gap-3 sm:columns-2 lg:columns-3">
             {project.gallery.map((imageSrc, idx) => (
-              <img
+              <button
                 key={`${project.title}-${idx}`}
-                src={imageSrc}
-                alt={`${project.title} gallery ${idx + 1}`}
-                loading="lazy"
-                className="h-44 w-full rounded-xl object-cover"
-              />
+                onClick={() => setLightboxIndex(idx)}
+                className="mb-3 block w-full break-inside-avoid overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:scale-[1.01] hover:border-white/35"
+                aria-label={`Open ${project.title} image ${idx + 1}`}
+              >
+                <img
+                  src={imageSrc}
+                  alt={`${project.title} image ${idx + 1}`}
+                  loading="lazy"
+                  className="w-full object-cover"
+                />
+              </button>
             ))}
           </div>
         </div>
+
+        <AnimatePresence>
+          {lightboxIndex !== null ? (
+            <motion.div
+              className="absolute inset-0 z-30 flex items-center justify-center bg-black/85 p-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setLightboxIndex(null)}
+            >
+              <button
+                className="absolute left-4 rounded-full border border-white/30 bg-black/35 p-2 text-white transition hover:border-white/60 hover:bg-black/60"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setLightboxIndex((prev) => (prev - 1 + project.gallery.length) % project.gallery.length);
+                }}
+                aria-label="Previous image"
+              >
+                <FiChevronLeft size={24} />
+              </button>
+              <img
+                src={project.gallery[lightboxIndex]}
+                alt={`${project.title} fullscreen ${lightboxIndex + 1}`}
+                loading="lazy"
+                className="max-h-[90%] max-w-[92%] rounded-2xl object-contain"
+                onClick={(event) => event.stopPropagation()}
+              />
+              <button
+                className="absolute right-4 rounded-full border border-white/30 bg-black/35 p-2 text-white transition hover:border-white/60 hover:bg-black/60"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setLightboxIndex((prev) => (prev + 1) % project.gallery.length);
+                }}
+                aria-label="Next image"
+              >
+                <FiChevronRight size={24} />
+              </button>
+              <div className="pointer-events-none absolute bottom-4 rounded-full bg-black/55 px-3 py-1 text-xs font-semibold text-white">
+                {lightboxIndex + 1} / {project.gallery.length}
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </motion.div>
     </motion.div>
   );
@@ -200,18 +176,59 @@ function ProjectModal({ project, onClose }) {
 export default function ProjectPortfolio() {
   const [activeProject, setActiveProject] = useState(null);
 
+  const projects = useMemo(
+    () => [
+      {
+        title: "North Hill Drive",
+        location: "Richardson, TX",
+        scope: "Whole Home",
+        gallery: toGallery(northHillModules),
+      },
+      {
+        title: "Kilbride Lane",
+        location: "Dallas, TX",
+        scope: "Kitchen + Bath + Exterior",
+        gallery: toGallery(kilbrideModules),
+      },
+      {
+        title: "Lovers Lane",
+        location: "Dallas, TX",
+        scope: "Interior Refresh",
+        gallery: toGallery(loversLaneModules, 36),
+      },
+      {
+        title: "Huntington",
+        location: "Dallas, TX",
+        scope: "Before / After Series",
+        gallery: toGallery(huntingtonModules),
+      },
+      {
+        title: "Twin Coves",
+        location: "Flower Mound, TX",
+        scope: "Waterfront Project",
+        gallery: toGallery(twinCovesModules),
+      },
+    ]
+      .filter((project) => project.gallery.length > 0)
+      .map((project) => ({
+        ...project,
+        cover: project.gallery[0],
+        accent: project.gallery[1] ?? project.gallery[0],
+        images: project.gallery.length,
+      })),
+    [],
+  );
+
   return (
     <section className="section-shell py-10 md:py-14">
       <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#92671d]">
-          Project Portfolio
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#92671d]">Project Portfolio</p>
         <h2 className="mt-3 text-3xl font-semibold text-[var(--brand-deep)] md:text-4xl">
-          Before and After Transformations
+          Uploaded Project Galleries
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {projects.map((project, index) => (
           <motion.article
             key={project.title}
@@ -219,37 +236,41 @@ export default function ProjectPortfolio() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.55, delay: index * 0.06 }}
-            className="overflow-hidden rounded-3xl border border-white/60 bg-white/75 shadow-[0_18px_56px_rgba(16,25,34,0.12)] backdrop-blur-md"
+            className="group overflow-hidden rounded-3xl border border-white/60 bg-white/75 shadow-[0_18px_56px_rgba(16,25,34,0.12)] backdrop-blur-md"
           >
-            <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-[1.1fr_1fr] lg:gap-0 lg:p-0">
-              <BeforeAfterSlider
-                beforeImage={project.beforeImage}
-                afterImage={project.afterImage}
-                title={project.title}
+            <div className="relative h-[250px] overflow-hidden">
+              <img
+                src={project.cover}
+                alt={project.title}
+                loading="lazy"
+                className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
               />
+              <img
+                src={project.accent}
+                alt={`${project.title} detail`}
+                loading="lazy"
+                className="absolute bottom-4 right-4 h-20 w-28 rounded-xl border-2 border-white/80 object-cover shadow-[0_10px_24px_rgba(0,0,0,0.35)] md:h-24 md:w-32"
+              />
+            </div>
 
-              <div className="p-3 md:p-5 lg:p-8">
-                <h3 className="text-2xl font-semibold text-[var(--brand-deep)]">{project.title}</h3>
-                <p className="mt-2 text-sm font-medium uppercase tracking-[0.12em] text-[#9b7a43]">
-                  {project.location}
-                </p>
+            <div className="p-6">
+              <h3 className="text-2xl font-semibold text-[var(--brand-deep)]">{project.title}</h3>
+              <p className="mt-2 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.12em] text-[#9b7a43]">
+                <FiMapPin size={14} />
+                {project.location}
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-slate-600">{project.scope}</p>
 
-                <div className="mt-5 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700">
-                    Duration: {project.duration}
-                  </span>
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700">
-                    Budget: {project.budget}
-                  </span>
-                </div>
-
-                <p className="mt-5 text-base leading-relaxed text-slate-600">{project.scope}</p>
-
+              <div className="mt-5 flex items-center justify-between">
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700">
+                  {project.images} Photos
+                </span>
                 <button
                   onClick={() => setActiveProject(project)}
-                  className="mt-6 rounded-full bg-[#e3bf7b] px-5 py-2.5 text-sm font-semibold text-[#1b1b1b] transition hover:-translate-y-0.5 hover:bg-[#d3ac61]"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#e3bf7b] px-5 py-2.5 text-sm font-semibold text-[#1b1b1b] transition hover:-translate-y-0.5 hover:bg-[#d3ac61]"
                 >
-                  View Full Case Study
+                  Open Gallery
+                  <FiExternalLink size={15} />
                 </button>
               </div>
             </div>
@@ -259,7 +280,7 @@ export default function ProjectPortfolio() {
 
       <AnimatePresence>
         {activeProject ? (
-          <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
+          <ProjectGalleryModal project={activeProject} onClose={() => setActiveProject(null)} />
         ) : null}
       </AnimatePresence>
     </section>

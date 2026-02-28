@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import { motion } from "framer-motion";
 import StatsStrip from "./components/StatsStrip";
+import InstantEstimate from "./components/InstantEstimate";
 import ProjectPortfolio from "./components/ProjectPortfolio";
 import Services from "./components/Services";
 import WhatTetelestaiCanDo from "./components/WhatTetelestaiCanDo";
@@ -10,6 +11,7 @@ import ProcessTimeline from "./components/ProcessTimeline";
 import OurMission from "./components/OurMission";
 import Reviews from "./components/Reviews";
 import Footer from "./components/Footer";
+import MobileLeadBar from "./components/MobileLeadBar";
 
 function App() {
   const links = [
@@ -25,6 +27,10 @@ function App() {
       label: "Reviews",
       href: "#reviews",
     },
+    {
+      label: "Contact",
+      href: "#contact",
+    },
   ];
 
   const fadeUp = {
@@ -39,8 +45,9 @@ function App() {
   return (
     <div className="mx-auto min-h-screen overflow-x-hidden">
       <Navbar title="Tetelestai Renovations" links={links} />
-      <main className="pt-20">
+      <main className="pt-20 pb-24 md:pb-0">
         <Hero />
+        <InstantEstimate />
 
         <section id="projects">
           <Services />
@@ -96,6 +103,7 @@ function App() {
         </section>
       </main>
       <Footer />
+      <MobileLeadBar />
     </div>
   );
 }

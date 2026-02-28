@@ -65,16 +65,16 @@ export default function Hero() {
 
         <div className="mt-9 flex flex-wrap items-center gap-4">
           <a
-            href="#projects"
+            href="#contact"
             className="rounded-full bg-[#e3bf7b] px-6 py-3 text-sm font-semibold text-[#1b1b1b] transition hover:-translate-y-0.5 hover:bg-[#d3ac61]"
           >
-            View Projects
+            Get Free Estimate
           </a>
           <a
-            href="#reviews"
+            href="tel:+19408897215"
             className="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-slate-500"
           >
-            Read Reviews
+Call 940-889-7215
           </a>
         </div>
 

@@ -35,10 +35,10 @@ function Navbar({ title, links = [] }) {
         </ul>
 
         <a
-          href="#reviews"
+          href="#contact"
           className="hidden rounded-full bg-[#e3bf7b] px-4 py-2 text-sm font-semibold text-[#1b1b1b] transition hover:bg-[#d3ac61] md:inline-flex"
         >
-          Get Estimate
+          Get Free Estimate
         </a>
 
         <button
@@ -67,11 +67,11 @@ function Navbar({ title, links = [] }) {
             ))}
             <li>
               <a
-                href="#reviews"
+                href="#contact"
                 className="mt-1 block rounded-lg bg-[#e3bf7b] px-3 py-2 text-sm font-semibold text-[#1b1b1b] transition hover:bg-[#d3ac61]"
                 onClick={() => setOpen(false)}
               >
-                Get Estimate
+                Get Free Estimate
               </a>
             </li>
           </ul>

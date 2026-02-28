@@ -50,13 +50,13 @@ export default function Footer() {
             <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-[#d5b073]">
               Company
             </h3>
-            <a href="/privacy" className="mt-3 block hover:text-white">
+            <a href="/privacy.html" className="mt-3 block hover:text-white">
               Privacy Policy
             </a>
-            <a href="/accessibility" className="block hover:text-white">
+            <a href="/accessibility.html" className="block hover:text-white">
               Accessibility Statement
             </a>
-            <a href="/terms" className="block hover:text-white">
+            <a href="/terms.html" className="block hover:text-white">
               Terms and Conditions
             </a>
 

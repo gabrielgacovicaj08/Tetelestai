@@ -1,31 +1,41 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FiArrowRight, FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
+import {
+  FiArrowRight,
+  FiChevronLeft,
+  FiChevronRight,
+  FiLoader,
+  FiX,
+} from "react-icons/fi";
 
-const sortByPath = ([a], [b]) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
-const toGallery = (modules, limit = 12) =>
-  Object.entries(modules).sort(sortByPath).map(([, src]) => src).slice(0, limit);
+import totalRenovationCover from "../assets/total renovation/G7400154-HDR.webp";
+import houseExtensionCover from "../assets/house extension/04-005_7818 Kilbride Ln.webp";
+import bathroomCover from "../assets/bathroom/18-021_620 Northill Dr.webp";
+import kitchenCover from "../assets/kitchen/07-004_620 Northill Dr.webp";
 
-const totalRenovationModules = import.meta.glob("../assets/total renovation/*.webp", {
-  eager: true,
-  import: "default",
-});
-const houseExtensionModules = import.meta.glob("../assets/house extension/*.webp", {
-  eager: true,
-  import: "default",
-});
-const bathroomModules = import.meta.glob("../assets/bathroom/*.webp", {
-  eager: true,
-  import: "default",
-});
-const kitchenModules = import.meta.glob("../assets/kitchen/*.webp", {
-  eager: true,
-  import: "default",
-});
+const GALLERY_PREVIEW_LIMIT = 12;
+
+const sortByPath = ([a], [b]) =>
+  a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+
+const toSortedEntries = (modules) => Object.entries(modules).sort(sortByPath);
+
+const buildGallery = async (modules, limit = GALLERY_PREVIEW_LIMIT) => {
+  const selectedEntries = toSortedEntries(modules).slice(0, limit);
+  const gallery = await Promise.all(
+    selectedEntries.map(([, load]) => load().then((mod) => mod.default)),
+  );
+  return gallery;
+};
+
+const totalRenovationModules = import.meta.glob("../assets/total renovation/*.webp");
+const houseExtensionModules = import.meta.glob("../assets/house extension/*.webp");
+const bathroomModules = import.meta.glob("../assets/bathroom/*.webp");
+const kitchenModules = import.meta.glob("../assets/kitchen/*.webp");
 
 function ServiceGalleryModal({ service, onClose }) {
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const imageCount = service?.gallery.length ?? 0;
+  const imageCount = service?.gallery?.length ?? 0;
 
   useEffect(() => {
     setLightboxIndex(null);
@@ -41,7 +51,7 @@ function ServiceGalleryModal({ service, onClose }) {
         }
         onClose();
       }
-      if (lightboxIndex === null) return;
+      if (lightboxIndex === null || imageCount === 0) return;
       if (event.key === "ArrowRight") {
         setLightboxIndex((prev) => (prev + 1) % imageCount);
       }
@@ -78,8 +88,12 @@ function ServiceGalleryModal({ service, onClose }) {
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d8b171]">Service Gallery</p>
-            <h3 className="mt-1 text-xl font-semibold md:text-2xl">{service.title}</h3>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d8b171]">
+              Service Gallery
+            </p>
+            <h3 className="mt-1 text-xl font-semibold md:text-2xl">
+              {service.title}
+            </h3>
           </div>
           <button
             onClick={onClose}
@@ -91,30 +105,41 @@ function ServiceGalleryModal({ service, onClose }) {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-5">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#d8b171]">
-            Click Any Photo to Open
-          </p>
-          <div className="columns-1 gap-3 sm:columns-2 lg:columns-3">
-            {service.gallery.map((imageSrc, idx) => (
-              <button
-                key={`${service.title}-${idx}`}
-                onClick={() => setLightboxIndex(idx)}
-                className="mb-3 block w-full break-inside-avoid overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:scale-[1.01] hover:border-white/35"
-                aria-label={`Open ${service.title} image ${idx + 1}`}
-              >
-                <img
-                  src={imageSrc}
-                  alt={`${service.title} image ${idx + 1}`}
-                  loading="lazy"
-                  className="w-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
+          {service.loading ? (
+            <div className="flex h-full min-h-[280px] flex-col items-center justify-center gap-3 text-white/80">
+              <FiLoader size={24} className="animate-spin" />
+              <p className="text-sm uppercase tracking-[0.14em]">
+                Loading project photos...
+              </p>
+            </div>
+          ) : (
+            <>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#d8b171]">
+                Click Any Photo to Open
+              </p>
+              <div className="columns-1 gap-3 sm:columns-2 lg:columns-3">
+                {service.gallery.map((imageSrc, idx) => (
+                  <button
+                    key={`${service.title}-${idx}`}
+                    onClick={() => setLightboxIndex(idx)}
+                    className="mb-3 block w-full break-inside-avoid overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:scale-[1.01] hover:border-white/35"
+                    aria-label={`Open ${service.title} image ${idx + 1}`}
+                  >
+                    <img
+                      src={imageSrc}
+                      alt={`${service.title} image ${idx + 1}`}
+                      loading="lazy"
+                      className="w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <AnimatePresence>
-          {lightboxIndex !== null ? (
+          {!service.loading && lightboxIndex !== null ? (
             <motion.div
               className="absolute inset-0 z-30 flex items-center justify-center bg-black/85 p-3"
               initial={{ opacity: 0 }}
@@ -162,36 +187,45 @@ function ServiceGalleryModal({ service, onClose }) {
 
 function Services() {
   const [activeService, setActiveService] = useState(null);
+  const [galleryCache, setGalleryCache] = useState({});
 
   const services = useMemo(
     () => [
       {
+        id: "total-renovation",
         title: "Total Renovation",
         subtitle: "Renovate your home from the ground up with purpose",
         description:
           "Delivering total home upgrades with care, precision, and skilled craftsmanship.",
-        gallery: toGallery(totalRenovationModules),
+        cover: totalRenovationCover,
+        modules: totalRenovationModules,
       },
       {
+        id: "house-extension",
         title: "House Extension",
         subtitle: "Expand your living space with seamless design",
         description:
           "Transform your home with thoughtful extensions that blend with your existing structure.",
-        gallery: toGallery(houseExtensionModules),
+        cover: houseExtensionCover,
+        modules: houseExtensionModules,
       },
       {
+        id: "bathroom-remodel",
         title: "Bathroom Remodel",
         subtitle: "Create comfort with practical luxury",
         description:
           "From waterproofing to fixtures, we build bathrooms that feel refined and perform for years.",
-        gallery: toGallery(bathroomModules),
+        cover: bathroomCover,
+        modules: bathroomModules,
       },
       {
+        id: "kitchen-remodel",
         title: "Kitchen Remodel",
         subtitle: "Make the heart of your home work better",
         description:
           "Design-led renovation, storage planning, and finish quality that improve both look and workflow.",
-        gallery: toGallery(kitchenModules),
+        cover: kitchenCover,
+        modules: kitchenModules,
       },
     ],
     [],
@@ -200,6 +234,24 @@ function Services() {
   const cardReveal = {
     hidden: { opacity: 0, y: 30 },
     show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
+  const openService = async (service) => {
+    const cachedGallery = galleryCache[service.id];
+
+    if (cachedGallery) {
+      setActiveService({ ...service, gallery: cachedGallery, loading: false });
+      return;
+    }
+
+    setActiveService({ ...service, gallery: [], loading: true });
+    const gallery = await buildGallery(service.modules);
+
+    setGalleryCache((prev) => ({ ...prev, [service.id]: gallery }));
+    setActiveService((prev) => {
+      if (!prev || prev.id !== service.id) return prev;
+      return { ...service, gallery, loading: false };
+    });
   };
 
   return (
@@ -216,33 +268,41 @@ function Services() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {services.map((service, index) => (
+        {services.map((service) => (
           <motion.article
-            key={service.title}
+            key={service.id}
             className="group cursor-pointer overflow-hidden rounded-3xl border border-white/60 bg-white/75 shadow-[0_18px_56px_rgba(16,25,34,0.12)] backdrop-blur-md"
             variants={cardReveal}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.25 }}
-            onClick={() => setActiveService(service)}
+            onClick={() => openService(service)}
           >
             <div className="overflow-hidden">
               <img
-                src={service.gallery[0]}
+                src={service.cover}
                 alt={service.title}
                 loading="lazy"
                 className="h-[240px] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
               />
             </div>
             <div className="p-7">
-              <h3 className="text-2xl font-semibold text-[var(--brand-deep)]">{service.title}</h3>
+              <h3 className="text-2xl font-semibold text-[var(--brand-deep)]">
+                {service.title}
+              </h3>
               <p className="mt-3 text-sm font-medium uppercase tracking-wider text-[#9b7a43]">
                 {service.subtitle}
               </p>
-              <p className="mt-4 text-base leading-relaxed text-slate-600">{service.description}</p>
+              <p className="mt-4 text-base leading-relaxed text-slate-600">
+                {service.description}
+              </p>
               <div className="mt-5 flex items-center justify-between">
                 <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                  {service.gallery.length} Photos
+                  {Math.min(
+                    GALLERY_PREVIEW_LIMIT,
+                    Object.keys(service.modules).length,
+                  )}{" "}
+                  Photos
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-full bg-[#e3bf7b] px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#1b1b1b]">
                   View Gallery
@@ -256,7 +316,10 @@ function Services() {
 
       <AnimatePresence>
         {activeService ? (
-          <ServiceGalleryModal service={activeService} onClose={() => setActiveService(null)} />
+          <ServiceGalleryModal
+            service={activeService}
+            onClose={() => setActiveService(null)}
+          />
         ) : null}
       </AnimatePresence>
     </section>

@@ -1,33 +1,80 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FiChevronLeft, FiChevronRight, FiExternalLink, FiMapPin, FiX } from "react-icons/fi";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiExternalLink,
+  FiLoader,
+  FiMapPin,
+  FiX,
+} from "react-icons/fi";
 
-const sortByPath = ([a], [b]) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
-const toGallery = (modules, limit = 24) =>
-  Object.entries(modules).sort(sortByPath).map(([, src]) => src).slice(0, limit);
+const sortByPath = ([a], [b]) =>
+  a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+
+const toSortedEntries = (modules) => Object.entries(modules).sort(sortByPath);
 
 const northHillModules = import.meta.glob("../assets/North Hill dr/*.webp", {
-  eager: true,
   import: "default",
 });
 const kilbrideModules = import.meta.glob("../assets/kilbride ln/*.webp", {
-  eager: true,
   import: "default",
 });
 const loversLaneModules = import.meta.glob("../assets/LoversLane/*.webp", {
-  eager: true,
   import: "default",
 });
 const huntingtonModules = import.meta.glob("../assets/Huntington/*.webp", {
-  eager: true,
   import: "default",
 });
 const twinCovesModules = import.meta.glob("../assets/Twin coves/*.webp", {
-  eager: true,
   import: "default",
 });
 
-function ProjectGalleryModal({ project, onClose }) {
+const projectSources = [
+  {
+    title: "North Hill Drive",
+    location: "Richardson, TX",
+    scope: "Whole Home",
+    entries: toSortedEntries(northHillModules),
+    galleryLimit: 24,
+  },
+  {
+    title: "Kilbride Lane",
+    location: "Dallas, TX",
+    scope: "Kitchen + Bath + Exterior",
+    entries: toSortedEntries(kilbrideModules),
+    galleryLimit: 24,
+  },
+  {
+    title: "Lovers Lane",
+    location: "Dallas, TX",
+    scope: "Interior Refresh",
+    entries: toSortedEntries(loversLaneModules),
+    galleryLimit: 36,
+  },
+  {
+    title: "Huntington",
+    location: "Dallas, TX",
+    scope: "Before / After Series",
+    entries: toSortedEntries(huntingtonModules),
+    galleryLimit: 24,
+  },
+  {
+    title: "Twin Coves",
+    location: "Flower Mound, TX",
+    scope: "Waterfront Project",
+    entries: toSortedEntries(twinCovesModules),
+    galleryLimit: 24,
+  },
+].filter((project) => project.entries.length > 0);
+
+async function loadImageList(entries, limit) {
+  const loaders = entries.slice(0, limit).map(([, loader]) => loader);
+  const loaded = await Promise.all(loaders.map((load) => load()));
+  return loaded.filter(Boolean);
+}
+
+function ProjectGalleryModal({ project, isLoading, onClose }) {
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
@@ -36,6 +83,7 @@ function ProjectGalleryModal({ project, onClose }) {
 
   useEffect(() => {
     if (!project) return undefined;
+
     const onKeyDown = (event) => {
       if (event.key === "Escape") {
         if (lightboxIndex !== null) {
@@ -44,7 +92,8 @@ function ProjectGalleryModal({ project, onClose }) {
         }
         onClose();
       }
-      if (lightboxIndex === null) return;
+
+      if (lightboxIndex === null || project.gallery.length === 0) return;
       if (event.key === "ArrowRight") {
         setLightboxIndex((prev) => (prev + 1) % project.gallery.length);
       }
@@ -107,27 +156,34 @@ function ProjectGalleryModal({ project, onClose }) {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-5">
-          <div className="columns-1 gap-3 sm:columns-2 lg:columns-3">
-            {project.gallery.map((imageSrc, idx) => (
-              <button
-                key={`${project.title}-${idx}`}
-                onClick={() => setLightboxIndex(idx)}
-                className="mb-3 block w-full break-inside-avoid overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:scale-[1.01] hover:border-white/35"
-                aria-label={`Open ${project.title} image ${idx + 1}`}
-              >
-                <img
-                  src={imageSrc}
-                  alt={`${project.title} image ${idx + 1}`}
-                  loading="lazy"
-                  className="w-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex min-h-52 items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 text-sm text-white/85">
+              <FiLoader className="animate-spin" size={18} />
+              Loading project gallery...
+            </div>
+          ) : (
+            <div className="columns-1 gap-3 sm:columns-2 lg:columns-3">
+              {project.gallery.map((imageSrc, idx) => (
+                <button
+                  key={`${project.title}-${idx}`}
+                  onClick={() => setLightboxIndex(idx)}
+                  className="mb-3 block w-full break-inside-avoid overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:scale-[1.01] hover:border-white/35"
+                  aria-label={`Open ${project.title} image ${idx + 1}`}
+                >
+                  <img
+                    src={imageSrc}
+                    alt={`${project.title} image ${idx + 1}`}
+                    loading="lazy"
+                    className="w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <AnimatePresence>
-          {lightboxIndex !== null ? (
+          {lightboxIndex !== null && !isLoading ? (
             <motion.div
               className="absolute inset-0 z-30 flex items-center justify-center bg-black/85 p-3"
               initial={{ opacity: 0 }}
@@ -175,48 +231,105 @@ function ProjectGalleryModal({ project, onClose }) {
 
 export default function ProjectPortfolio() {
   const [activeProject, setActiveProject] = useState(null);
+  const [projectCards, setProjectCards] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(false);
 
-  const projects = useMemo(
-    () => [
-      {
-        title: "North Hill Drive",
-        location: "Richardson, TX",
-        scope: "Whole Home",
-        gallery: toGallery(northHillModules),
-      },
-      {
-        title: "Kilbride Lane",
-        location: "Dallas, TX",
-        scope: "Kitchen + Bath + Exterior",
-        gallery: toGallery(kilbrideModules),
-      },
-      {
-        title: "Lovers Lane",
-        location: "Dallas, TX",
-        scope: "Interior Refresh",
-        gallery: toGallery(loversLaneModules, 36),
-      },
-      {
-        title: "Huntington",
-        location: "Dallas, TX",
-        scope: "Before / After Series",
-        gallery: toGallery(huntingtonModules),
-      },
-      {
-        title: "Twin Coves",
-        location: "Flower Mound, TX",
-        scope: "Waterfront Project",
-        gallery: toGallery(twinCovesModules),
-      },
-    ]
-      .filter((project) => project.gallery.length > 0)
-      .map((project) => ({
-        ...project,
-        cover: project.gallery[0],
-        accent: project.gallery[1] ?? project.gallery[0],
-        images: project.gallery.length,
+  const baseProjects = useMemo(
+    () =>
+      projectSources.map((project) => ({
+        title: project.title,
+        location: project.location,
+        scope: project.scope,
+        entries: project.entries,
+        galleryLimit: project.galleryLimit,
+        images: Math.min(project.entries.length, project.galleryLimit),
       })),
     [],
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCardPreviews = async () => {
+      const cards = await Promise.all(
+        baseProjects.map(async (project) => {
+          const previews = await loadImageList(project.entries, Math.min(2, project.images));
+          return {
+            title: project.title,
+            location: project.location,
+            scope: project.scope,
+            images: project.images,
+            cover: previews[0] ?? "",
+            accent: previews[1] ?? previews[0] ?? "",
+            gallery: [],
+          };
+        }),
+      );
+
+      if (isMounted) {
+        setProjectCards(cards.filter((project) => project.cover));
+      }
+    };
+
+    loadCardPreviews();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [baseProjects]);
+
+  const openProject = useCallback(
+    async (projectTitle) => {
+      const projectMeta = baseProjects.find((project) => project.title === projectTitle);
+      if (!projectMeta) return;
+
+      const existing = projectCards.find((project) => project.title === projectTitle);
+
+      setActiveProject(
+        existing ?? {
+          title: projectMeta.title,
+          location: projectMeta.location,
+          scope: projectMeta.scope,
+          images: projectMeta.images,
+          cover: "",
+          accent: "",
+          gallery: [],
+        },
+      );
+
+      if (existing?.gallery?.length) {
+        setGalleryLoading(false);
+        return;
+      }
+
+      setGalleryLoading(true);
+
+      try {
+        const gallery = await loadImageList(projectMeta.entries, projectMeta.galleryLimit);
+
+        setProjectCards((prev) =>
+          prev.map((project) =>
+            project.title === projectTitle
+              ? {
+                  ...project,
+                  gallery,
+                }
+              : project,
+          ),
+        );
+
+        setActiveProject((prev) => {
+          if (!prev || prev.title !== projectTitle) return prev;
+          return {
+            ...prev,
+            gallery,
+          };
+        });
+      } finally {
+        setGalleryLoading(false);
+      }
+    },
+    [baseProjects, projectCards],
   );
 
   return (
@@ -229,7 +342,7 @@ export default function ProjectPortfolio() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {projects.map((project, index) => (
+        {projectCards.map((project, index) => (
           <motion.article
             key={project.title}
             initial={{ opacity: 0, y: 24 }}
@@ -245,12 +358,14 @@ export default function ProjectPortfolio() {
                 loading="lazy"
                 className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
               />
-              <img
-                src={project.accent}
-                alt={`${project.title} detail`}
-                loading="lazy"
-                className="absolute bottom-4 right-4 h-20 w-28 rounded-xl border-2 border-white/80 object-cover shadow-[0_10px_24px_rgba(0,0,0,0.35)] md:h-24 md:w-32"
-              />
+              {project.accent ? (
+                <img
+                  src={project.accent}
+                  alt={`${project.title} detail`}
+                  loading="lazy"
+                  className="absolute bottom-4 right-4 h-20 w-28 rounded-xl border-2 border-white/80 object-cover shadow-[0_10px_24px_rgba(0,0,0,0.35)] md:h-24 md:w-32"
+                />
+              ) : null}
             </div>
 
             <div className="p-6">
@@ -266,7 +381,7 @@ export default function ProjectPortfolio() {
                   {project.images} Photos
                 </span>
                 <button
-                  onClick={() => setActiveProject(project)}
+                  onClick={() => openProject(project.title)}
                   className="inline-flex items-center gap-2 rounded-full bg-[#e3bf7b] px-5 py-2.5 text-sm font-semibold text-[#1b1b1b] transition hover:-translate-y-0.5 hover:bg-[#d3ac61]"
                 >
                   Open Gallery
@@ -280,7 +395,14 @@ export default function ProjectPortfolio() {
 
       <AnimatePresence>
         {activeProject ? (
-          <ProjectGalleryModal project={activeProject} onClose={() => setActiveProject(null)} />
+          <ProjectGalleryModal
+            project={activeProject}
+            isLoading={galleryLoading}
+            onClose={() => {
+              setActiveProject(null);
+              setGalleryLoading(false);
+            }}
+          />
         ) : null}
       </AnimatePresence>
     </section>

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import Logo from "../assets/tetelestailogo1.PNG";
+import { trackLeadEvent } from "../utils/leadTracking";
 
 function Navbar({ title, links = [] }) {
   const [open, setOpen] = useState(false);
@@ -13,7 +14,7 @@ function Navbar({ title, links = [] }) {
           <img
             src={Logo}
             alt="Tetelestai Renovations logo"
-            loading="lazy"
+            loading="eager"
             className="h-10 w-auto md:h-12"
           />
           <a href="#" className="text-base font-semibold tracking-wide md:text-lg">
@@ -35,7 +36,8 @@ function Navbar({ title, links = [] }) {
         </ul>
 
         <a
-          href="#contact"
+          href="#instant-estimate"
+          onClick={() => trackLeadEvent("estimate_cta_click", { placement: "navbar_desktop" })}
           className="hidden rounded-full bg-[#e3bf7b] px-4 py-2 text-sm font-semibold text-[#1b1b1b] transition hover:bg-[#d3ac61] md:inline-flex"
         >
           Get Free Estimate
@@ -67,9 +69,12 @@ function Navbar({ title, links = [] }) {
             ))}
             <li>
               <a
-                href="#contact"
+                href="#instant-estimate"
                 className="mt-1 block rounded-lg bg-[#e3bf7b] px-3 py-2 text-sm font-semibold text-[#1b1b1b] transition hover:bg-[#d3ac61]"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  trackLeadEvent("estimate_cta_click", { placement: "navbar_mobile" });
+                  setOpen(false);
+                }}
               >
                 Get Free Estimate
               </a>

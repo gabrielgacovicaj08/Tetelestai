@@ -32,21 +32,21 @@ const twinCovesModules = import.meta.glob("../assets/Twin coves/*.webp", {
 
 const projectSources = [
   {
-    title: "North Hill Drive",
+    title: "Richardson Heights",
     location: "Richardson, TX",
     scope: "Whole Home",
     entries: toSortedEntries(northHillModules),
     galleryLimit: 24,
   },
   {
-    title: "Kilbride Lane",
+    title: "Highlands North",
     location: "Dallas, TX",
     scope: "Kitchen + Bath + Exterior",
     entries: toSortedEntries(kilbrideModules),
     galleryLimit: 24,
   },
   {
-    title: "Lovers Lane",
+    title: "Caruth Hills",
     location: "Dallas, TX",
     scope: "Interior Refresh",
     entries: toSortedEntries(loversLaneModules),
@@ -60,8 +60,8 @@ const projectSources = [
     galleryLimit: 24,
   },
   {
-    title: "Twin Coves",
-    location: "Flower Mound, TX",
+    title: "Prestonwood Creek",
+    location: "Dallas, TX",
     scope: "Waterfront Project",
     entries: toSortedEntries(twinCovesModules),
     galleryLimit: 24,
@@ -98,7 +98,10 @@ function ProjectGalleryModal({ project, isLoading, onClose }) {
         setLightboxIndex((prev) => (prev + 1) % project.gallery.length);
       }
       if (event.key === "ArrowLeft") {
-        setLightboxIndex((prev) => (prev - 1 + project.gallery.length) % project.gallery.length);
+        setLightboxIndex(
+          (prev) =>
+            (prev - 1 + project.gallery.length) % project.gallery.length,
+        );
       }
     };
 
@@ -130,8 +133,12 @@ function ProjectGalleryModal({ project, isLoading, onClose }) {
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d8b171]">Project Gallery</p>
-            <h3 className="mt-1 text-xl font-semibold md:text-2xl">{project.title}</h3>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d8b171]">
+              Project Gallery
+            </p>
+            <h3 className="mt-1 text-xl font-semibold md:text-2xl">
+              {project.title}
+            </h3>
           </div>
           <button
             onClick={onClose}
@@ -195,7 +202,11 @@ function ProjectGalleryModal({ project, isLoading, onClose }) {
                 className="absolute left-4 rounded-full border border-white/30 bg-black/35 p-2 text-white transition hover:border-white/60 hover:bg-black/60"
                 onClick={(event) => {
                   event.stopPropagation();
-                  setLightboxIndex((prev) => (prev - 1 + project.gallery.length) % project.gallery.length);
+                  setLightboxIndex(
+                    (prev) =>
+                      (prev - 1 + project.gallery.length) %
+                      project.gallery.length,
+                  );
                 }}
                 aria-label="Previous image"
               >
@@ -212,7 +223,9 @@ function ProjectGalleryModal({ project, isLoading, onClose }) {
                 className="absolute right-4 rounded-full border border-white/30 bg-black/35 p-2 text-white transition hover:border-white/60 hover:bg-black/60"
                 onClick={(event) => {
                   event.stopPropagation();
-                  setLightboxIndex((prev) => (prev + 1) % project.gallery.length);
+                  setLightboxIndex(
+                    (prev) => (prev + 1) % project.gallery.length,
+                  );
                 }}
                 aria-label="Next image"
               >
@@ -253,7 +266,10 @@ export default function ProjectPortfolio() {
     const loadCardPreviews = async () => {
       const cards = await Promise.all(
         baseProjects.map(async (project) => {
-          const previews = await loadImageList(project.entries, Math.min(2, project.images));
+          const previews = await loadImageList(
+            project.entries,
+            Math.min(2, project.images),
+          );
           return {
             title: project.title,
             location: project.location,
@@ -280,10 +296,14 @@ export default function ProjectPortfolio() {
 
   const openProject = useCallback(
     async (projectTitle) => {
-      const projectMeta = baseProjects.find((project) => project.title === projectTitle);
+      const projectMeta = baseProjects.find(
+        (project) => project.title === projectTitle,
+      );
       if (!projectMeta) return;
 
-      const existing = projectCards.find((project) => project.title === projectTitle);
+      const existing = projectCards.find(
+        (project) => project.title === projectTitle,
+      );
 
       setActiveProject(
         existing ?? {
@@ -305,7 +325,10 @@ export default function ProjectPortfolio() {
       setGalleryLoading(true);
 
       try {
-        const gallery = await loadImageList(projectMeta.entries, projectMeta.galleryLimit);
+        const gallery = await loadImageList(
+          projectMeta.entries,
+          projectMeta.galleryLimit,
+        );
 
         setProjectCards((prev) =>
           prev.map((project) =>
@@ -335,7 +358,9 @@ export default function ProjectPortfolio() {
   return (
     <section className="section-shell py-10 md:py-14">
       <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#92671d]">Project Portfolio</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#92671d]">
+          Project Portfolio
+        </p>
         <h2 className="mt-3 text-3xl font-semibold text-[var(--brand-deep)] md:text-4xl">
           Uploaded Project Galleries
         </h2>
@@ -369,12 +394,16 @@ export default function ProjectPortfolio() {
             </div>
 
             <div className="p-6">
-              <h3 className="text-2xl font-semibold text-[var(--brand-deep)]">{project.title}</h3>
+              <h3 className="text-2xl font-semibold text-[var(--brand-deep)]">
+                {project.title}
+              </h3>
               <p className="mt-2 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.12em] text-[#9b7a43]">
                 <FiMapPin size={14} />
                 {project.location}
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-slate-600">{project.scope}</p>
+              <p className="mt-4 text-sm leading-relaxed text-slate-600">
+                {project.scope}
+              </p>
 
               <div className="mt-5 flex items-center justify-between">
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700">

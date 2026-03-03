@@ -10,7 +10,9 @@ import { installGlobalLeadClickTracking } from "./utils/leadTracking";
 
 const StatsStrip = lazy(() => import("./components/StatsStrip"));
 const Services = lazy(() => import("./components/Services"));
-const WhatTetelestaiCanDo = lazy(() => import("./components/WhatTetelestaiCanDo"));
+const WhatTetelestaiCanDo = lazy(
+  () => import("./components/WhatTetelestaiCanDo"),
+);
 const ProcessTimeline = lazy(() => import("./components/ProcessTimeline"));
 const OurMission = lazy(() => import("./components/OurMission"));
 const Reviews = lazy(() => import("./components/Reviews"));
@@ -135,9 +137,9 @@ function App() {
             whileInView="show"
             viewport={{ once: true, amount: 0.4 }}
           >
-            Tetelestai Construction excels in providing renovation services,
-            rebuilding, and new construction projects with disciplined planning
-            and clean, durable finishes.
+            Tetelestai Renovations excels in providing renovations services,
+            rebuilding, and new additions projects with transparent
+            communication, disciplined planning, and clean finishes
           </motion.div>
         </section>
 
@@ -167,7 +169,11 @@ function App() {
         <InstantEstimate />
       </main>
 
-      <section id="contact" className="scroll-mt-28" aria-label="Contact Tetelestai Renovations">
+      <section
+        id="contact"
+        className="scroll-mt-28"
+        aria-label="Contact Tetelestai Renovations"
+      >
         <Suspense fallback={sectionFallback}>
           <Footer />
         </Suspense>

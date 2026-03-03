@@ -5,7 +5,7 @@ const FAQ_ITEMS = [
   {
     question: "How quickly can we get a quote?",
     answer:
-      "Most homeowners get a same-day response and a scoped estimate conversation within 24 hours. For larger remodels, we schedule a walkthrough first so pricing is realistic and not a rough guess.",
+      "Most homeowners get a same-day response and a scoped estimate conversation within 1 week. For larger remodels, we schedule a walkthrough first so pricing is realistic and not a rough guess.",
   },
   {
     question: "Do you handle permits and inspections?",
@@ -25,7 +25,7 @@ const FAQ_ITEMS = [
   {
     question: "Which areas do you serve?",
     answer:
-      "Tetelestai Renovations serves Dallas, Richardson, Flower Mound, and nearby communities in North Texas.",
+      "Tetelestai Renovations serves Dallas, Richardson, Plano, Garland, Irving, Frisco, Addison, and nearby communities in North Texas.",
   },
 ];
 
@@ -72,14 +72,19 @@ export default function FAQ() {
             const isOpen = openQuestion === item.question;
 
             return (
-              <div key={item.question} className="rounded-2xl border border-slate-200 bg-slate-50/70">
+              <div
+                key={item.question}
+                className="rounded-2xl border border-slate-200 bg-slate-50/70"
+              >
                 <button
                   type="button"
                   onClick={() => setOpenQuestion(isOpen ? "" : item.question)}
                   aria-expanded={isOpen}
                   className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
                 >
-                  <span className="text-sm font-semibold text-slate-800 md:text-base">{item.question}</span>
+                  <span className="text-sm font-semibold text-slate-800 md:text-base">
+                    {item.question}
+                  </span>
                   <FiChevronDown
                     size={18}
                     className={`shrink-0 text-slate-500 transition-transform ${isOpen ? "rotate-180" : ""}`}

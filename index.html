@@ -40,15 +40,65 @@
     />
     <meta name="twitter:image" content="/tetelestailogo1.PNG" />
 
+    <meta name="theme-color" content="#0f1720" />
+
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "GeneralContractor",
+        "@id": "#/schema/general-contractor",
         "name": "Tetelestai Renovations",
+        "url": "/",
+        "image": "/tetelestailogo1.PNG",
         "telephone": "+1-940-889-7215",
         "email": "Tetelestai.business@gmail.com",
-        "areaServed": ["Dallas, TX", "Richardson, TX", "Flower Mound, TX"],
-        "url": "/",
+        "priceRange": "$$$",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "2703 Sherrill Park Dr",
+          "addressLocality": "Richardson",
+          "addressRegion": "TX",
+          "postalCode": "75082",
+          "addressCountry": "US"
+        },
+        "areaServed": [
+          {
+            "@type": "City",
+            "name": "Dallas"
+          },
+          {
+            "@type": "City",
+            "name": "Richardson"
+          },
+          {
+            "@type": "City",
+            "name": "Flower Mound"
+          }
+        ],
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday"
+            ],
+            "opens": "08:00",
+            "closes": "18:00"
+          }
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+1-940-889-7215",
+          "email": "Tetelestai.business@gmail.com",
+          "areaServed": "US",
+          "availableLanguage": ["English", "Spanish"]
+        },
+        "sameAs": ["https://www.instagram.com/tetelestai.renovationz/"],
         "serviceType": [
           "Kitchen remodeling",
           "Bathroom remodeling",
@@ -56,6 +106,14 @@
           "Whole-home renovations",
           "New construction"
         ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Tetelestai Renovations",
+        "url": "/"
       }
     </script>
   </head>

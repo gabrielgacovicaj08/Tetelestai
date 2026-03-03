@@ -20,6 +20,18 @@ const sortByPath = ([a], [b]) =>
 
 const toSortedEntries = (modules) => Object.entries(modules).sort(sortByPath);
 
+const removeEntriesByFilename = (modules, excludedFilenames = []) => {
+  if (!excludedFilenames.length) return modules;
+
+  const excluded = new Set(excludedFilenames);
+  return Object.fromEntries(
+    Object.entries(modules).filter(([path]) => {
+      const filename = path.split("/").pop();
+      return !excluded.has(filename);
+    }),
+  );
+};
+
 const buildGallery = async (modules, limit = GALLERY_PREVIEW_LIMIT) => {
   const selectedEntries = toSortedEntries(modules).slice(0, limit);
   const gallery = await Promise.all(
@@ -28,10 +40,22 @@ const buildGallery = async (modules, limit = GALLERY_PREVIEW_LIMIT) => {
   return gallery;
 };
 
-const totalRenovationModules = import.meta.glob("../assets/total renovation/*.webp");
-const houseExtensionModules = import.meta.glob("../assets/house extension/*.webp");
-const bathroomModules = import.meta.glob("../assets/bathroom/*.webp");
-const kitchenModules = import.meta.glob("../assets/kitchen/*.webp");
+const totalRenovationModules = removeEntriesByFilename(
+  import.meta.glob("../assets/total renovation/*.webp"),
+  ["G7400154-HDR.webp"],
+);
+const houseExtensionModules = removeEntriesByFilename(
+  import.meta.glob("../assets/house extension/*.webp"),
+  ["04-005_7818 Kilbride Ln.webp"],
+);
+const bathroomModules = removeEntriesByFilename(
+  import.meta.glob("../assets/bathroom/*.webp"),
+  ["18-021_620 Northill Dr.webp"],
+);
+const kitchenModules = removeEntriesByFilename(
+  import.meta.glob("../assets/kitchen/*.webp"),
+  ["07-004_620 Northill Dr.webp"],
+);
 
 function ServiceGalleryModal({ service, onClose }) {
   const [lightboxIndex, setLightboxIndex] = useState(null);

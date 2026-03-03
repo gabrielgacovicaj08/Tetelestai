@@ -4,6 +4,7 @@ import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import heroMain from "../assets/total renovation/G7400434-HDR-Enhanced-NR.webp";
 import heroAltOne from "../assets/kitchen/before-after24.webp";
 import heroAltTwo from "../assets/house extension/before-after19.webp";
+import { trackLeadEvent } from "../utils/leadTracking";
 
 export default function Hero() {
   const slides = [
@@ -65,16 +66,18 @@ export default function Hero() {
 
         <div className="mt-9 flex flex-wrap items-center gap-4">
           <a
-            href="#contact"
+            href="#instant-estimate"
+            onClick={() => trackLeadEvent("estimate_cta_click", { placement: "hero_primary" })}
             className="rounded-full bg-[#e3bf7b] px-6 py-3 text-sm font-semibold text-[#1b1b1b] transition hover:-translate-y-0.5 hover:bg-[#d3ac61]"
           >
             Get Free Estimate
           </a>
           <a
             href="tel:+19408897215"
+            onClick={() => trackLeadEvent("call_click", { placement: "hero_secondary" })}
             className="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-slate-500"
           >
-Call 940-889-7215
+            Call 940-889-7215
           </a>
         </div>
 
@@ -115,7 +118,9 @@ Call 940-889-7215
             key={slide.image}
             src={slide.image}
             alt={slide.title}
-            loading="lazy"
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
+            decoding="async"
             className="h-[460px] w-full rounded-3xl object-cover shadow-[0_24px_80px_rgba(10,14,20,0.32)] md:h-[540px]"
             initial={{ opacity: 0, x: 0 }}
             animate={{ opacity: 1, x: 0 }}

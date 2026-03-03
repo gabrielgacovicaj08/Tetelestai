@@ -1,17 +1,28 @@
 import "./App.css";
+import { Suspense, lazy, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import { motion } from "framer-motion";
-import StatsStrip from "./components/StatsStrip";
 import InstantEstimate from "./components/InstantEstimate";
-import ProjectPortfolio from "./components/ProjectPortfolio";
-import Services from "./components/Services";
-import WhatTetelestaiCanDo from "./components/WhatTetelestaiCanDo";
-import ProcessTimeline from "./components/ProcessTimeline";
-import OurMission from "./components/OurMission";
-import Reviews from "./components/Reviews";
-import Footer from "./components/Footer";
 import MobileLeadBar from "./components/MobileLeadBar";
+import DesktopLeadRail from "./components/DesktopLeadRail";
+import { installGlobalLeadClickTracking } from "./utils/leadTracking";
+
+const StatsStrip = lazy(() => import("./components/StatsStrip"));
+const Services = lazy(() => import("./components/Services"));
+const WhatTetelestaiCanDo = lazy(() => import("./components/WhatTetelestaiCanDo"));
+const ProcessTimeline = lazy(() => import("./components/ProcessTimeline"));
+const OurMission = lazy(() => import("./components/OurMission"));
+const Reviews = lazy(() => import("./components/Reviews"));
+const ProjectPortfolio = lazy(() => import("./components/ProjectPortfolio"));
+const FAQ = lazy(() => import("./components/FAQ"));
+const Footer = lazy(() => import("./components/Footer"));
+
+const sectionFallback = (
+  <div className="section-shell py-10" aria-hidden="true">
+    <div className="h-24 animate-pulse rounded-2xl bg-black/5" />
+  </div>
+);
 
 function App() {
   const links = [
@@ -28,6 +39,10 @@ function App() {
       href: "#reviews",
     },
     {
+      label: "FAQ",
+      href: "#faq",
+    },
+    {
       label: "Contact",
       href: "#contact",
     },
@@ -42,27 +57,66 @@ function App() {
     },
   };
 
+  useEffect(() => {
+    const preloadSections = () => {
+      import("./components/StatsStrip");
+      import("./components/Services");
+      import("./components/WhatTetelestaiCanDo");
+      import("./components/ProcessTimeline");
+      import("./components/OurMission");
+      import("./components/Reviews");
+      import("./components/ProjectPortfolio");
+      import("./components/FAQ");
+      import("./components/Footer");
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(preloadSections, {
+        timeout: 1500,
+      });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = window.setTimeout(preloadSections, 800);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    const teardown = installGlobalLeadClickTracking();
+    return teardown;
+  }, []);
+
   return (
     <div className="mx-auto min-h-screen overflow-x-hidden">
       <Navbar title="Tetelestai Renovations" links={links} />
       <main className="pt-20 pb-24 md:pb-0">
         <Hero />
-        <InstantEstimate />
 
         <section id="projects">
-          <Services />
+          <Suspense fallback={sectionFallback}>
+            <Services />
+          </Suspense>
         </section>
-        <StatsStrip />
+
+        <Suspense fallback={sectionFallback}>
+          <StatsStrip />
+        </Suspense>
 
         <section id="capabilities">
-          <WhatTetelestaiCanDo />
+          <Suspense fallback={sectionFallback}>
+            <WhatTetelestaiCanDo />
+          </Suspense>
         </section>
 
         <section id="process">
-          <ProcessTimeline />
+          <Suspense fallback={sectionFallback}>
+            <ProcessTimeline />
+          </Suspense>
         </section>
 
-        <OurMission />
+        <Suspense fallback={sectionFallback}>
+          <OurMission />
+        </Suspense>
 
         <section id="about" className="section-shell py-18 text-center">
           <motion.div
@@ -94,15 +148,31 @@ function App() {
             whileInView="show"
             viewport={{ once: true, amount: 0.3 }}
           >
-            <Reviews />
+            <Suspense fallback={sectionFallback}>
+              <Reviews />
+            </Suspense>
           </motion.div>
         </section>
 
         <section id="portfolio">
-          <ProjectPortfolio />
+          <Suspense fallback={sectionFallback}>
+            <ProjectPortfolio />
+          </Suspense>
         </section>
+
+        <Suspense fallback={sectionFallback}>
+          <FAQ />
+        </Suspense>
+
+        <InstantEstimate />
       </main>
-      <Footer />
+
+      <section id="contact" className="scroll-mt-28" aria-label="Contact Tetelestai Renovations">
+        <Suspense fallback={sectionFallback}>
+          <Footer />
+        </Suspense>
+      </section>
+      <DesktopLeadRail />
       <MobileLeadBar />
     </div>
   );

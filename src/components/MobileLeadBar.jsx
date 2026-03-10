@@ -26,7 +26,7 @@ export default function MobileLeadBar() {
         <a
           href={smsHref}
           onClick={() => trackLeadEvent("sms_click", { placement: "mobile_sticky_bar" })}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/8 px-4 py-3 text-sm font-semibold text-white"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e3bf7b] px-4 py-3 text-sm font-semibold text-[#1b1b1b]"
           aria-label="Text Tetelestai for a free estimate"
         >
           <FiMessageSquare size={16} />

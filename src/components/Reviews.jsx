@@ -17,10 +17,10 @@ const reviews = [
     text: "Kitchen looks amazing. They handled everything end-to-end.",
   },
   {
-    name: "Daniel P.",
+    name: "Anonymous",
     source: "Google",
     stars: 5,
-    text: "Excellent work. From quality of craftsmanship to communication and consistency, every part of the process felt professional and worth it.",
+    text: "EXCELLENT WORK! Everything about Tetelestai Renovations is the epitome of excellence. My husband and I used this company to update our kitchen and three bathrooms. I cannot express just how impressed my husband and I are with our experience with this company. From the quality of work to the fact they showed up when they said they would, it was worth every penny. Everything turned out wonderfully. My advice: If you ever see a negative review about this company, don’t believe it. Assume it is a disgruntled competitor who cannot compete with such a great company.",
   },
 ];
 
@@ -28,7 +28,8 @@ export default function Reviews() {
   const [active, setActive] = useState(0);
 
   const next = () => setActive((prev) => (prev + 1) % reviews.length);
-  const prev = () => setActive((prev) => (prev - 1 + reviews.length) % reviews.length);
+  const prev = () =>
+    setActive((prev) => (prev - 1 + reviews.length) % reviews.length);
 
   return (
     <section className="rounded-3xl border border-white/60 bg-white/70 p-6 shadow-[0_22px_70px_rgba(16,25,34,0.12)] backdrop-blur-md sm:p-8">
@@ -71,8 +72,12 @@ export default function Reviews() {
           >
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h3 className="text-lg font-semibold text-[var(--brand-deep)]">{reviews[active].name}</h3>
-                <p className="text-sm text-slate-500">{reviews[active].source}</p>
+                <h3 className="text-lg font-semibold text-[var(--brand-deep)]">
+                  {reviews[active].name}
+                </h3>
+                <p className="text-sm text-slate-500">
+                  {reviews[active].source}
+                </p>
               </div>
               <div className="flex items-center gap-1 text-[#c58b25]">
                 {Array.from({ length: reviews[active].stars }).map((_, i) => (
@@ -81,7 +86,9 @@ export default function Reviews() {
               </div>
             </div>
 
-            <p className="mt-5 text-base leading-relaxed text-slate-600">{reviews[active].text}</p>
+            <p className="mt-5 text-base leading-relaxed text-slate-600">
+              {reviews[active].text}
+            </p>
           </motion.article>
         </AnimatePresence>
       </div>

@@ -175,7 +175,9 @@ function ServiceGalleryModal({ service, onClose }) {
                 className="absolute left-4 rounded-full border border-white/30 bg-black/35 p-2 text-white transition hover:border-white/60 hover:bg-black/60"
                 onClick={(event) => {
                   event.stopPropagation();
-                  setLightboxIndex((prev) => (prev - 1 + imageCount) % imageCount);
+                  setLightboxIndex(
+                    (prev) => (prev - 1 + imageCount) % imageCount,
+                  );
                 }}
                 aria-label="Previous image"
               >
@@ -217,7 +219,7 @@ function Services() {
     () => [
       {
         id: "total-renovation",
-        title: "Total Renovation",
+        title: "Full Remodel",
         subtitle: "Renovate your home from the ground up with purpose",
         description:
           "Delivering total home upgrades with care, precision, and skilled craftsmanship.",
@@ -226,7 +228,7 @@ function Services() {
       },
       {
         id: "house-extension",
-        title: "House Extension",
+        title: "House Addition",
         subtitle: "Expand your living space with seamless design",
         description:
           "Transform your home with thoughtful extensions that blend with your existing structure.",

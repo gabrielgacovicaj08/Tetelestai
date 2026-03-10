@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import heroMain from "../assets/total renovation/G7400434-HDR-Enhanced-NR.webp";
-import heroAltOne from "../assets/kitchen/before-after24.webp";
-import heroAltTwo from "../assets/house extension/before-after19.webp";
+import heroMain from "../assets/Carosello Website/IMG_7590.webp";
+import heroAltOne from "../assets/Carosello Website/18-021_620 Northill Dr.webp";
+import heroAltTwo from "../assets/Carosello Website/08-005_620 Northill Dr.webp";
 import { trackLeadEvent } from "../utils/leadTracking";
 
 export default function Hero() {
@@ -41,7 +41,7 @@ export default function Hero() {
   const slide = slides[index];
 
   return (
-    <section className="section-shell grid min-h-[620px] grid-cols-1 items-center gap-8 py-10 lg:grid-cols-[1.05fr_1fr]">
+    <section className="section-shell grid min-h-[540px] grid-cols-1 items-center gap-8 py-10 lg:grid-cols-[1.05fr_1fr]">
       <div className="rounded-3xl border border-white/60 bg-[var(--brand-card)] p-7 shadow-[0_18px_70px_rgba(0,0,0,0.08)] backdrop-blur-md sm:p-10">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#92671d]">
           Dallas Renovation Specialists
@@ -121,7 +121,7 @@ export default function Hero() {
             loading={index === 0 ? "eager" : "lazy"}
             fetchPriority={index === 0 ? "high" : "auto"}
             decoding="async"
-            className="h-[460px] w-full rounded-3xl object-cover shadow-[0_24px_80px_rgba(10,14,20,0.32)] md:h-[540px]"
+            className="h-[360px] w-full rounded-3xl object-cover shadow-[0_24px_80px_rgba(10,14,20,0.32)] md:h-[430px]"
             initial={{ opacity: 0, x: 0 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ x: 40, opacity: 0 }}

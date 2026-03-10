@@ -94,15 +94,15 @@ function App() {
       <main className="pt-20 pb-24 md:pb-0">
         <Hero />
 
-        <section id="projects">
+        <section>
           <Suspense fallback={sectionFallback}>
             <Services />
           </Suspense>
         </section>
 
-        <Suspense fallback={sectionFallback}>
+        {/* <Suspense fallback={sectionFallback}>
           <StatsStrip />
-        </Suspense>
+        </Suspense> */}
 
         <section id="capabilities">
           <Suspense fallback={sectionFallback}>
@@ -156,7 +156,7 @@ function App() {
           </motion.div>
         </section>
 
-        <section id="portfolio">
+        <section id="projects">
           <Suspense fallback={sectionFallback}>
             <ProjectPortfolio />
           </Suspense>

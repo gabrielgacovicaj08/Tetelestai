@@ -6,7 +6,10 @@ import {
   FaTiktok,
 } from "react-icons/fa6";
 import Logo from "../assets/tetelestailogo1.PNG";
-import { buildPreferredEmailHref, buildSmsHref } from "../utils/leadAttribution";
+import {
+  buildPreferredEmailHref,
+  buildSmsHref,
+} from "../utils/leadAttribution";
 import { trackLeadEvent } from "../utils/leadTracking";
 
 export default function Footer() {
@@ -49,21 +52,29 @@ export default function Footer() {
             </h3>
             <a
               href="tel:+19408897215"
-              onClick={() => trackLeadEvent("call_click", { placement: "footer_contact" })}
+              onClick={() =>
+                trackLeadEvent("call_click", { placement: "footer_contact" })
+              }
               className="mt-3 block hover:text-white"
             >
               940-889-7215
             </a>
             <a
               href="tel:+19187064419"
-              onClick={() => trackLeadEvent("call_click", { placement: "footer_contact_secondary" })}
+              onClick={() =>
+                trackLeadEvent("call_click", {
+                  placement: "footer_contact_secondary",
+                })
+              }
               className="block hover:text-white"
             >
               918-706-4419
             </a>
             <a
               href={emailHref}
-              onClick={() => trackLeadEvent("email_click", { placement: "footer_contact" })}
+              onClick={() =>
+                trackLeadEvent("email_click", { placement: "footer_contact" })
+              }
               className="block hover:text-white"
             >
               Tetelestai.business@gmail.com
@@ -76,15 +87,19 @@ export default function Footer() {
             <div className="mt-5 flex flex-wrap gap-3">
               <a
                 href="tel:+19408897215"
-                onClick={() => trackLeadEvent("call_click", { placement: "footer_cta" })}
+                onClick={() =>
+                  trackLeadEvent("call_click", { placement: "footer_cta" })
+                }
                 className="inline-flex items-center rounded-full bg-[#d5b073] px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#0f1720] transition hover:brightness-105"
               >
                 Call for Estimate
               </a>
               <a
                 href={smsHref}
-                onClick={() => trackLeadEvent("sms_click", { placement: "footer_cta" })}
-                className="inline-flex items-center rounded-full border border-white/35 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:border-white/60 hover:bg-white/10"
+                onClick={() =>
+                  trackLeadEvent("sms_click", { placement: "footer_cta" })
+                }
+                className="inline-flex items-center rounded-full bg-[#d5b073] px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#0f1720] transition hover:brightness-105"
               >
                 Text Us
               </a>

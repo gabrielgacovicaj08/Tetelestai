@@ -15,7 +15,7 @@ export default function MobileLeadBar() {
     <div className="fixed right-0 bottom-0 left-0 z-[60] border-t border-white/40 bg-[#0f1720f2] px-3 pb-[calc(env(safe-area-inset-bottom)+0.65rem)] pt-2 backdrop-blur md:hidden">
       <div className="mx-auto grid max-w-xl grid-cols-2 gap-2">
         <a
-          href="tel:+19408897215"
+          href="tel:+19408827215"
           onClick={() => trackLeadEvent("call_click", { placement: "mobile_sticky_bar" })}
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e3bf7b] px-4 py-3 text-sm font-semibold text-[#1b1b1b]"
           aria-label="Call Tetelestai now"

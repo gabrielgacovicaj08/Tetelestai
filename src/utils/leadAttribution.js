@@ -151,7 +151,7 @@ function isIOSDevice() {
 export function buildSmsHref(details = {}) {
   const body = encodeURIComponent(buildLeadDetailsMessage(details));
   const separator = isIOSDevice() ? "&" : "?";
-  return `sms:+19408897215${separator}body=${body}`;
+  return `sms:+19408827215${separator}body=${body}`;
 }
 
 export function buildEmailHref(details = {}) {
@@ -177,5 +177,5 @@ export function buildPreferredEmailHref(details = {}) {
 
 export function buildWhatsAppHref(details = {}) {
   const text = encodeURIComponent(buildLeadDetailsMessage(details));
-  return `https://wa.me/19408897215?text=${text}`;
+  return `https://wa.me/19408827215?text=${text}`;
 }

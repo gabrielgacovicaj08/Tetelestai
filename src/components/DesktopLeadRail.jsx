@@ -39,7 +39,7 @@ export default function DesktopLeadRail() {
       <div className="pointer-events-auto rounded-2xl border border-white/55 bg-[#0f1720f2] p-2 shadow-[0_20px_50px_rgba(10,12,20,0.35)] backdrop-blur">
         <div className="grid grid-cols-1 gap-2">
           <a
-            href="tel:+19408897215"
+            href="tel:+19408827215"
             onClick={() =>
               trackLeadEvent("call_click", { placement: "desktop_sticky_rail" })
             }

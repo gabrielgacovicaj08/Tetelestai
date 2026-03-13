@@ -73,11 +73,11 @@ export default function Hero() {
             Get Free Estimate
           </a>
           <a
-            href="tel:+19408897215"
+            href="tel:+19408827215"
             onClick={() => trackLeadEvent("call_click", { placement: "hero_secondary" })}
             className="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-slate-500"
           >
-            Call 940-889-7215
+            Call 940-882-7215
           </a>
         </div>
 

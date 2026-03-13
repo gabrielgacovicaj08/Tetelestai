@@ -51,16 +51,16 @@ export default function Footer() {
               Contact
             </h3>
             <a
-              href="tel:+19408897215"
+              href="tel:+19408827215"
               onClick={() =>
                 trackLeadEvent("call_click", { placement: "footer_contact" })
               }
               className="mt-3 block hover:text-white"
             >
-              940-889-7215
+              940-882-7215
             </a>
             <a
-              href="tel:+19187064419"
+              href="tel:+19408827215"
               onClick={() =>
                 trackLeadEvent("call_click", {
                   placement: "footer_contact_secondary",
@@ -68,7 +68,7 @@ export default function Footer() {
               }
               className="block hover:text-white"
             >
-              918-706-4419
+              940-882-7215
             </a>
             <a
               href={emailHref}
@@ -86,7 +86,7 @@ export default function Footer() {
 
             <div className="mt-5 flex flex-wrap gap-3">
               <a
-                href="tel:+19408897215"
+                href="tel:+19408827215"
                 onClick={() =>
                   trackLeadEvent("call_click", { placement: "footer_cta" })
                 }

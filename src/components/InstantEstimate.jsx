@@ -305,7 +305,7 @@ export default function InstantEstimate() {
 
             <div className="mt-5 flex flex-wrap gap-3">
               <a
-                href="tel:+19408897215"
+                href="tel:+19408827215"
                 onClick={() => trackLeadEvent("call_click", { placement: "instant_estimate_primary" })}
                 className="inline-flex items-center gap-2 rounded-full bg-[#e3bf7b] px-5 py-3 text-sm font-semibold text-[#1b1b1b] transition hover:-translate-y-0.5 hover:bg-[#d3ac61]"
               >
@@ -352,7 +352,7 @@ export default function InstantEstimate() {
                 onChange={(event) =>
                   handleFieldChange("phone", normalizePhone(event.target.value))
                 }
-                placeholder="(940) 889-7215"
+                placeholder="(940) 882-7215"
                 inputMode="tel"
                 autoComplete="tel"
                 className={fieldClass}

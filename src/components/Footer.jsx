@@ -80,7 +80,6 @@ export default function Footer() {
               Tetelestai.business@gmail.com
             </a>
             <div className="mt-4 text-white/75">
-              <p>2703 Sherrill Park Dr</p>
               <p>Richardson, TX 75082</p>
             </div>
 

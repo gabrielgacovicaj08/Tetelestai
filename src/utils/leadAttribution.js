@@ -94,14 +94,8 @@ export function getAttributionLines() {
   return [
     ...firstTouchPairs,
     ...lastTouchPairs,
-    snapshot.firstTouch?.landingPage
-      ? `first_landing_page: ${snapshot.firstTouch.landingPage}`
-      : null,
     snapshot.firstTouch?.referrer
       ? `first_referrer: ${snapshot.firstTouch.referrer}`
-      : null,
-    snapshot.lastTouch?.landingPage
-      ? `last_landing_page: ${snapshot.lastTouch.landingPage}`
       : null,
     snapshot.lastTouch?.referrer
       ? `last_referrer: ${snapshot.lastTouch.referrer}`
@@ -109,35 +103,12 @@ export function getAttributionLines() {
     snapshot.firstTouch?.capturedAt
       ? `first_touch_captured_at: ${snapshot.firstTouch.capturedAt}`
       : null,
-    snapshot.lastTouch?.capturedAt
-      ? `last_touch_captured_at: ${snapshot.lastTouch.capturedAt}`
-      : null,
   ].filter(Boolean);
 }
 
-export function buildLeadDetailsMessage({
-  name = "",
-  phone = "",
-  zip = "",
-  projectType = "",
-  timeline = "",
-  budget = "",
-  notes = "",
-  includeAttribution = true,
-} = {}) {
-  const attribution = includeAttribution ? getAttributionLines() : [];
-
+export function buildLeadDetailsMessage(_details = {}) {
   const lines = [
     "Hi Tetelestai, I'd like a free estimate.",
-    name ? `Name: ${name}` : null,
-    phone ? `Phone: ${phone}` : null,
-    zip ? `ZIP Code: ${zip}` : null,
-    projectType ? `Project: ${projectType}` : null,
-    timeline ? `Timeline: ${timeline}` : null,
-    budget ? `Budget Range: ${budget}` : null,
-    notes ? `Notes: ${notes}` : null,
-    attribution.length ? "Lead Source:" : null,
-    ...attribution,
   ].filter(Boolean);
 
   return lines.join("\n");

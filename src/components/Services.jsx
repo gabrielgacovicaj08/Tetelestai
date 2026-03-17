@@ -13,7 +13,7 @@ import houseExtensionCover from "../assets/house extension/04-005_7818 Kilbride 
 import bathroomCover from "../assets/bathroom/18-021_620 Northill Dr.webp";
 import kitchenCover from "../assets/kitchen/07-004_620 Northill Dr.webp";
 
-const GALLERY_PREVIEW_LIMIT = 12;
+const GALLERY_PREVIEW_LIMIT = 100;
 
 const sortByPath = ([a], [b]) =>
   a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });

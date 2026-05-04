@@ -29,6 +29,9 @@ const huntingtonModules = import.meta.glob("../assets/Huntington/*.webp", {
 const twinCovesModules = import.meta.glob("../assets/Twin coves/*.webp", {
   import: "default",
 });
+const opalLnModules = import.meta.glob("../assets/623 Opal Ln/*.webp", {
+  import: "default",
+});
 
 const projectSources = [
   {
@@ -65,6 +68,13 @@ const projectSources = [
     scope: "Kitchen and Media Room",
     entries: toSortedEntries(twinCovesModules),
     galleryLimit: 24,
+  },
+  {
+    title: "Floyd Terrace",
+    location: "Richardson, TX",
+    scope: "Full House Renovation",
+    entries: toSortedEntries(opalLnModules),
+    galleryLimit: 30,
   },
 ].filter((project) => project.entries.length > 0);
 
